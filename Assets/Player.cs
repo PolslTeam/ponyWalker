@@ -64,7 +64,7 @@ public class Player : MonoBehaviour {
                 um.motorSpeed = UPPER_SPEED * udir;
                 um.maxMotorTorque = MOVING_TORQUE;
             }
-            else if (!isUpperMinLimitReached) {
+            else if (!keyPressed && !isUpperMinLimitReached) {
                 um.motorSpeed = UPPER_SPEED * -udir;
                 um.maxMotorTorque = MOVING_TORQUE;
             }
@@ -87,7 +87,7 @@ public class Player : MonoBehaviour {
                 // legs grip on click, and front legs grip when not clicking
                 lrb.drag = udir == 1 ? MOVING_DRAG : 0;
             }
-            else if (!isLowerMinLimitReached) {
+            else if (!keyPressed && !isLowerMinLimitReached) {
                 lm.motorSpeed = -LOWER_SPEED;
                 lm.maxMotorTorque = MOVING_TORQUE;
                 
