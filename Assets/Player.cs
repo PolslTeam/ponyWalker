@@ -6,27 +6,24 @@ using UnityEngine;
 
 public class Player : MonoBehaviour {
     static int LEGS_AMOUNT = 4;
-    string[] legsNames = {"leftLeg1", "leftLeg2", "rightLeg1", "rightLeg2"};
+    string[] LEGS_NAMES = {"leftLeg1", "leftLeg2", "rightLeg1", "rightLeg2"};
+    static int UPPER_SPEED = 100;
+    static int LOWER_SPEED = 100;
+    static int MOVING_DRAG = 500;
+    static int MOVING_TORQUE = 100;
+    // this torque could be smaller to make legs more soft when not moving them
+    static int REST_TORQUE = 1000;
+
 
     GameObject[] upperLegs = new GameObject[LEGS_AMOUNT];
     GameObject[] lowerLegs = new GameObject[LEGS_AMOUNT];
     HingeJoint2D[] upperHingeJoints = new HingeJoint2D[LEGS_AMOUNT];
     HingeJoint2D[] lowerHingeJoints = new HingeJoint2D[LEGS_AMOUNT];
     Rigidbody2D[] lowerRigidBodies = new Rigidbody2D[LEGS_AMOUNT];
-
-    static int UPPER_SPEED = 100;
-    static int LOWER_SPEED = 100;
-    static int MOVING_DRAG = 500;
-    static int MOVING_TORQUE = 100;
-    // this torque could be smaller to make legs more soft when not moving them
-
-    static int REST_TORQUE = 1000;
-
-// init all variables
     void Start() {
         for(int i = 0; i < LEGS_AMOUNT; i++) {
-            upperLegs[i] = GameObject.Find(legsNames[i] + "Upper");
-            lowerLegs[i] = GameObject.Find(legsNames[i] + "Lower");
+            upperLegs[i] = GameObject.Find(LEGS_NAMES[i] + "Upper");
+            lowerLegs[i] = GameObject.Find(LEGS_NAMES[i] + "Lower");
             upperHingeJoints[i] = upperLegs[i].GetComponent<HingeJoint2D>();
             lowerHingeJoints[i] = lowerLegs[i].GetComponent<HingeJoint2D>();
             lowerRigidBodies[i] = lowerLegs[i].GetComponent<Rigidbody2D>();
@@ -36,7 +33,7 @@ public class Player : MonoBehaviour {
         Physics2D.IgnoreCollision(lowerLegs[2].GetComponent<PolygonCollider2D>(), lowerLegs[3].GetComponent<PolygonCollider2D>());
     }
 
-// direction that leg moves on click
+    // direction that leg moves on click
     int[] UPPER_DIRS = {1, 1, -1, -1};
     KeyCode[] KEYS = {KeyCode.Q, KeyCode.W, KeyCode.O, KeyCode.P};
 
@@ -57,21 +54,31 @@ public class Player : MonoBehaviour {
             KeyCode key = KEYS[i];
             int udir = UPPER_DIRS[i];
 
+            bool keyPressed = Input.GetKey(key);
+
             // handle upper part of leg
-            if(Input.GetKey(key) && uhj.jointAngle*-udir > -90) {
+            bool isUpperMaxLimitReached = uhj.jointAngle * udir > 90;
+            bool isUpperMinLimitReached = uhj.jointAngle * udir < 0;
+
+            if(keyPressed && !isUpperMaxLimitReached) {
                 um.motorSpeed = UPPER_SPEED * udir;
                 um.maxMotorTorque = MOVING_TORQUE;
-            } else if (uhj.jointAngle*-udir < 0) {
+            }
+            else if (!isUpperMinLimitReached) {
                 um.motorSpeed = UPPER_SPEED * -udir;
                 um.maxMotorTorque = MOVING_TORQUE;
-            } else {
+            }
+            else {
                 um.motorSpeed = 0;
                 um.maxMotorTorque = REST_TORQUE;
             }
             uhj.motor = um;
 
             // handle lower part of leg
-            if(Input.GetKey(key) && lhj.jointAngle < 90) {
+            bool isLowerMaxLimitReached = lhj.jointAngle > 90;
+            bool isLowerMinLimitReached = lhj.jointAngle < 0;
+
+            if(keyPressed && !isLowerMaxLimitReached) {
                 lm.motorSpeed = LOWER_SPEED;
                 lm.maxMotorTorque = MOVING_TORQUE;
 
@@ -79,12 +86,14 @@ public class Player : MonoBehaviour {
                 // back legs move backward on click, front moves forward, so back
                 // legs grip on click, and front legs grip when not clicking
                 lrb.drag = udir == 1 ? MOVING_DRAG : 0;
-            } else if (lhj.jointAngle > 0) {
+            }
+            else if (!isLowerMinLimitReached) {
                 lm.motorSpeed = -LOWER_SPEED;
                 lm.maxMotorTorque = MOVING_TORQUE;
                 
                 lrb.drag = udir != 1 ? MOVING_DRAG : 0;
-            } else {
+            }
+            else {
                 lm.motorSpeed = 0;
                 lm.maxMotorTorque = REST_TORQUE;
 
