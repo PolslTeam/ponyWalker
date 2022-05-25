@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 using UnityEngine;
 using System;
@@ -10,17 +8,18 @@ public class Player : MonoBehaviour {
     string[] LEGS_NAMES = {"leftLeg1", "leftLeg2", "rightLeg1", "rightLeg2"};
     static int UPPER_SPEED = 100;
     static int LOWER_SPEED = 150;
-    static int MOVING_DRAG = 500;
     static int MOVING_TORQUE = 100;
-    static int REST_TORQUE = 100;
-    static int FRONT_LOW_TORQUE = 20;
+    static int UPPER_MAX_LIMIT = 90; // [deg]
 
+    PhysicsMaterial2D frictionHigh;
+    PhysicsMaterial2D frictionLow;
 
     GameObject[] upperLegs = new GameObject[LEGS_AMOUNT];
     GameObject[] lowerLegs = new GameObject[LEGS_AMOUNT];
     HingeJoint2D[] upperHingeJoints = new HingeJoint2D[LEGS_AMOUNT];
     HingeJoint2D[] lowerHingeJoints = new HingeJoint2D[LEGS_AMOUNT];
     Rigidbody2D[] lowerRigidBodies = new Rigidbody2D[LEGS_AMOUNT];
+    PolygonCollider2D[] lowerPoligonColiders = new PolygonCollider2D[LEGS_AMOUNT];
     void Start() {
         for(int i = 0; i < LEGS_AMOUNT; i++) {
             upperLegs[i] = GameObject.Find(LEGS_NAMES[i] + "Upper");
@@ -28,10 +27,15 @@ public class Player : MonoBehaviour {
             upperHingeJoints[i] = upperLegs[i].GetComponent<HingeJoint2D>();
             lowerHingeJoints[i] = lowerLegs[i].GetComponent<HingeJoint2D>();
             lowerRigidBodies[i] = lowerLegs[i].GetComponent<Rigidbody2D>();
+            lowerPoligonColiders[i] = lowerLegs[i].GetComponent<PolygonCollider2D>();
         }
         // prevent colliding between legs
         Physics2D.IgnoreCollision(lowerLegs[0].GetComponent<PolygonCollider2D>(), lowerLegs[1].GetComponent<PolygonCollider2D>());
         Physics2D.IgnoreCollision(lowerLegs[2].GetComponent<PolygonCollider2D>(), lowerLegs[3].GetComponent<PolygonCollider2D>());
+
+        // load materials (yes, this is very stupid way to do it)
+        frictionHigh = lowerPoligonColiders[0].sharedMaterial;
+        frictionLow  = lowerPoligonColiders[1].sharedMaterial;
     }
 
     // direction that leg moves on click
@@ -53,6 +57,7 @@ public class Player : MonoBehaviour {
             Rigidbody2D lrb = lowerRigidBodies[i];
             GameObject ul = upperLegs[i];
             GameObject ll = lowerLegs[i];
+            PolygonCollider2D lpc = lowerPoligonColiders[i];
 
             KeyCode key = KEYS[i];
             int udir = UPPER_DIRS[i];
@@ -60,34 +65,44 @@ public class Player : MonoBehaviour {
             bool isKeyPressed = Input.GetKey(key);
 
             // handle upper part of leg
-            bool isUpperMaxLimitReached = Math.Abs(uhj.jointAngle) > 90;
+            bool isUpperMaxLimitReached = Math.Abs(uhj.jointAngle) > UPPER_MAX_LIMIT;
 
             if(isKeyPressed) {
-                um.motorSpeed = isUpperMaxLimitReached ? 0 : UPPER_SPEED * udir;
+                // other direction of move in frond and back legs
+                float speedWithDir = UPPER_SPEED * udir;
+                // move more if not reached limit
+                um.motorSpeed = isUpperMaxLimitReached ? 0 : speedWithDir;
                 um.maxMotorTorque = MOVING_TORQUE;
-                // lowerLegs[0].GetComponent<FixedJoint2D>().connectedAnchor = new Vector2((float) -0.2457747, (float) (-0.603699 + 0.1));
             }
             else {
-                um.motorSpeed = UPPER_SPEED * -uhj.jointAngle / 15;
-                um.maxMotorTorque = MOVING_TORQUE;
+                // stabilise leg to neutral position, and make is slower near the center point
+                float speed = UPPER_SPEED * -uhj.jointAngle / 15;
+                // but not too fast
+                um.motorSpeed = Math.Min(Math.Max(speed, -UPPER_SPEED), UPPER_SPEED);
+
+                um.maxMotorTorque = MOVING_TORQUE; // same as other one...
             }
             uhj.motor = um;
 
-            // handle lower part of leg (only front legs)
+            // try to stabilize back lower legs quite hardly
             if(i < 2) {
                 // float angleWanted = -lhj.jointAngle - uhj.jointAngle;
                 float angleWanted = -lhj.jointAngle;
-                if(isKeyPressed)
-                    angleWanted += 20;
-                else
-                    angleWanted -= 10;
+                // if key is pressed, move them slightly
+                angleWanted += isKeyPressed ? 20 : -10;
 
-                lm.motorSpeed = LOWER_SPEED * angleWanted / 15;
+                lm.motorSpeed = LOWER_SPEED * angleWanted / 50;
                 lm.maxMotorTorque = MOVING_TORQUE;
+
+                lrb.drag = isKeyPressed ? 2 : 1;
+                lpc.sharedMaterial = isKeyPressed ? frictionHigh : frictionLow;
             }
+            // front legs more relaxed
             else {
+                // stabilize with relation to the torso, not upper leg
                 float angleToBody = -lhj.jointAngle - uhj.jointAngle;
                 lm.motorSpeed = LOWER_SPEED * angleToBody / 20;
+                // lower torque near the center, but does it make any sense? probably should be even the opposite..
                 lm.maxMotorTorque = MOVING_TORQUE * Math.Abs(angleToBody) / 20;
             }
             lhj.motor = lm;
