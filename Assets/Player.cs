@@ -2,17 +2,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 using UnityEngine;
+using System;
 
 
 public class Player : MonoBehaviour {
     static int LEGS_AMOUNT = 4;
     string[] LEGS_NAMES = {"leftLeg1", "leftLeg2", "rightLeg1", "rightLeg2"};
-    static int UPPER_SPEED = 50;
-    static int LOWER_SPEED = 50;
+    static int UPPER_SPEED = 100;
+    static int LOWER_SPEED = 150;
     static int MOVING_DRAG = 500;
     static int MOVING_TORQUE = 100;
     // IDEA: this torque could be smaller to make legs more soft when not moving them
-    static int REST_TORQUE = 1000;
+    static int REST_TORQUE = 100;
 
 
     GameObject[] upperLegs = new GameObject[LEGS_AMOUNT];
@@ -50,59 +51,34 @@ public class Player : MonoBehaviour {
             JointMotor2D um = uhj.motor;
             JointMotor2D lm = lhj.motor;
             Rigidbody2D lrb = lowerRigidBodies[i];
+            GameObject ul = upperLegs[i];
+            GameObject ll = lowerLegs[i];
 
             KeyCode key = KEYS[i];
             int udir = UPPER_DIRS[i];
 
-            bool keyPressed = Input.GetKey(key);
-
-            // IDEA: all of tha angle checking, could be replaced with "limits"
+            bool isKeyPressed = Input.GetKey(key);
 
             // handle upper part of leg
-            bool isUpperMaxLimitReached = uhj.jointAngle * udir > 90;
-            bool isUpperMinLimitReached = uhj.jointAngle * udir < 0;
+            bool isUpperMaxLimitReached = Math.Abs(uhj.jointAngle) > 90;
 
-            if(keyPressed && !isUpperMaxLimitReached) {
-                um.motorSpeed = UPPER_SPEED * udir;
+            if(isKeyPressed) {
+                um.motorSpeed = isUpperMaxLimitReached ? 0 : UPPER_SPEED * udir;
                 um.maxMotorTorque = MOVING_TORQUE;
-            }
-            else if (!keyPressed && !isUpperMinLimitReached) {
-                um.motorSpeed = UPPER_SPEED * -udir;
-                um.maxMotorTorque = MOVING_TORQUE;
+                // lowerLegs[0].GetComponent<FixedJoint2D>().connectedAnchor = new Vector2((float) -0.2457747, (float) (-0.603699 + 0.1));
             }
             else {
-                um.motorSpeed = 0;
-                um.maxMotorTorque = REST_TORQUE;
+                um.motorSpeed = UPPER_SPEED * -uhj.jointAngle / 15;
+                um.maxMotorTorque = MOVING_TORQUE;
             }
             uhj.motor = um;
 
-            // handle lower part of leg
-            bool isLowerMaxLimitReached = lhj.jointAngle > 90;
-            bool isLowerMinLimitReached = lhj.jointAngle < 0;
+            if(i < 2) continue;
 
-            if(keyPressed && !isLowerMaxLimitReached) {
-                lm.motorSpeed = LOWER_SPEED;
-                lm.maxMotorTorque = MOVING_TORQUE;
-
-                // drag only when moving leg back in the relation to the scene:
-                // back legs move backward on click, front moves forward, so back
-                // legs grip on click, and front legs grip when not clicking
-                lrb.drag = udir == 1 ? MOVING_DRAG : 0;
-            }
-            else if (!keyPressed && !isLowerMinLimitReached) {
-                lm.motorSpeed = -LOWER_SPEED;
-                lm.maxMotorTorque = MOVING_TORQUE;
-                
-                lrb.drag = udir != 1 ? MOVING_DRAG : 0;
-            }
-            else {
-                lm.motorSpeed = 0;
-                lm.maxMotorTorque = REST_TORQUE;
-
-                // don't drag when leg is not moving
-                // to allow movement of horse by other legs
-                lrb.drag = 0;
-            }
+            // handle lower part of leg (only front legs)
+            float angleToBody = -lhj.jointAngle - uhj.jointAngle;
+            lm.motorSpeed = LOWER_SPEED * angleToBody / 15;
+            lm.maxMotorTorque = MOVING_TORQUE;
             lhj.motor = lm;
         }
     }
