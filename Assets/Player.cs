@@ -7,11 +7,11 @@ using UnityEngine;
 public class Player : MonoBehaviour {
     static int LEGS_AMOUNT = 4;
     string[] LEGS_NAMES = {"leftLeg1", "leftLeg2", "rightLeg1", "rightLeg2"};
-    static int UPPER_SPEED = 100;
-    static int LOWER_SPEED = 100;
+    static int UPPER_SPEED = 50;
+    static int LOWER_SPEED = 50;
     static int MOVING_DRAG = 500;
     static int MOVING_TORQUE = 100;
-    // this torque could be smaller to make legs more soft when not moving them
+    // IDEA: this torque could be smaller to make legs more soft when not moving them
     static int REST_TORQUE = 1000;
 
 
@@ -55,6 +55,8 @@ public class Player : MonoBehaviour {
             int udir = UPPER_DIRS[i];
 
             bool keyPressed = Input.GetKey(key);
+
+            // IDEA: all of tha angle checking, could be replaced with "limits"
 
             // handle upper part of leg
             bool isUpperMaxLimitReached = uhj.jointAngle * udir > 90;
