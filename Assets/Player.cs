@@ -12,8 +12,8 @@ public class Player : MonoBehaviour {
     static int LOWER_SPEED = 150;
     static int MOVING_DRAG = 500;
     static int MOVING_TORQUE = 100;
-    // IDEA: this torque could be smaller to make legs more soft when not moving them
     static int REST_TORQUE = 100;
+    static int FRONT_LOW_TORQUE = 20;
 
 
     GameObject[] upperLegs = new GameObject[LEGS_AMOUNT];
@@ -73,12 +73,23 @@ public class Player : MonoBehaviour {
             }
             uhj.motor = um;
 
-            if(i < 2) continue;
-
             // handle lower part of leg (only front legs)
-            float angleToBody = -lhj.jointAngle - uhj.jointAngle;
-            lm.motorSpeed = LOWER_SPEED * angleToBody / 15;
-            lm.maxMotorTorque = MOVING_TORQUE;
+            if(i < 2) {
+                // float angleWanted = -lhj.jointAngle - uhj.jointAngle;
+                float angleWanted = -lhj.jointAngle;
+                if(isKeyPressed)
+                    angleWanted += 20;
+                else
+                    angleWanted -= 10;
+
+                lm.motorSpeed = LOWER_SPEED * angleWanted / 15;
+                lm.maxMotorTorque = MOVING_TORQUE;
+            }
+            else {
+                float angleToBody = -lhj.jointAngle - uhj.jointAngle;
+                lm.motorSpeed = LOWER_SPEED * angleToBody / 20;
+                lm.maxMotorTorque = MOVING_TORQUE * Math.Abs(angleToBody) / 20;
+            }
             lhj.motor = lm;
         }
     }
