@@ -49,6 +49,11 @@ public class Player : MonoBehaviour {
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
             return;
         }
+        // menu on "esc"
+        if(Input.GetKey(KeyCode.Escape)) {
+            SceneManager.LoadScene(0);
+            return;
+        }
 
         for(int i = 0; i < LEGS_AMOUNT; i++) {
             HingeJoint2D uhj = upperHingeJoints[i];
