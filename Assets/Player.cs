@@ -9,7 +9,7 @@ public class Player : MonoBehaviour {
     GameObject[] legsList = new GameObject[4];
     GameObject[] lowerLegsList = new GameObject[4];
     HingeJoint2D[] hingesList = new HingeJoint2D[4];
-    HingeJoint2D[] hingesListLow = new HingeJoint2D[4];
+    //HingeJoint2D[] hingesListLow = new HingeJoint2D[4];
 
     public Transform player;
 
@@ -21,7 +21,7 @@ public class Player : MonoBehaviour {
             legsList[i] = GameObject.Find(LEGS_NAMES[i] + "Upper");
             lowerLegsList[i] = GameObject.Find(LEGS_NAMES[i] + "Lower");
             hingesList[i] = legsList[i].GetComponent<HingeJoint2D>();
-            hingesListLow[i] = lowerLegsList[i].GetComponent<HingeJoint2D>();
+            //hingesListLow[i] = lowerLegsList[i].GetComponent<HingeJoint2D>();
         }
         Physics2D.IgnoreCollision(lowerLegsList[0].GetComponent<PolygonCollider2D>(), lowerLegsList[1].GetComponent<PolygonCollider2D>());
         Physics2D.IgnoreCollision(lowerLegsList[2].GetComponent<PolygonCollider2D>(), lowerLegsList[3].GetComponent<PolygonCollider2D>());
@@ -40,23 +40,23 @@ public class Player : MonoBehaviour {
 
         for (int i = 0; i < LEGS_AMOUNT; i++) {
             HingeJoint2D uh = hingesList[i];
-            HingeJoint2D lh = hingesListLow[i];
+            //HingeJoint2D lh = hingesListLow[i];
             JointMotor2D um = uh.motor;
-            JointMotor2D lm = lh.motor;
+            //JointMotor2D lm = lh.motor;
             um.maxMotorTorque = 100;
-            lm.maxMotorTorque = 100;
+            //lm.maxMotorTorque = 100;
             if (keyDown[i].Equals(1.0f))
             {
                 um.motorSpeed = -200;
-                lm.motorSpeed = 200;
+                //lm.motorSpeed = 200;
             }
             else
             {
                 um.motorSpeed = 300;
-                lm.motorSpeed = -300;
+                //lm.motorSpeed = -300;
             }
             hingesList[i].motor = um;
-            hingesListLow[i].motor = lm;
+            //hingesListLow[i].motor = lm;
         }
     }
 }
