@@ -32,6 +32,11 @@ public class Player : MonoBehaviour {
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
             return;
         }
+        // menu on "esc"
+        if(Input.GetKey(KeyCode.Escape)) {
+            SceneManager.LoadScene(0);
+            return;
+        }
 
         keyDown[0] = Input.GetKey(KeyCode.Q) ? 1.0f : 0.0f;
         keyDown[1] = Input.GetKey(KeyCode.W) ? 1.0f : 0.0f;
