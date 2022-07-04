@@ -3237,5 +3237,141 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 8573479112013540152, guid: 600c1d0bbd216409084f90451530ae6e, type: 3}
+      propertyPath: m_Mass
+      value: 0.1060867
+      objectReference: {fileID: 0}
+    - target: {fileID: 8573479112013540152, guid: 600c1d0bbd216409084f90451530ae6e, type: 3}
+      propertyPath: m_UseAutoMass
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8573479112183200937, guid: 600c1d0bbd216409084f90451530ae6e, type: 3}
+      propertyPath: m_Mass
+      value: 0.1060867
+      objectReference: {fileID: 0}
+    - target: {fileID: 8573479112183200937, guid: 600c1d0bbd216409084f90451530ae6e, type: 3}
+      propertyPath: m_UseAutoMass
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8573479112331265161, guid: 600c1d0bbd216409084f90451530ae6e, type: 3}
+      propertyPath: m_Mass
+      value: 0.1060867
+      objectReference: {fileID: 0}
+    - target: {fileID: 8573479112331265161, guid: 600c1d0bbd216409084f90451530ae6e, type: 3}
+      propertyPath: m_LinearDrag
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8573479112331265161, guid: 600c1d0bbd216409084f90451530ae6e, type: 3}
+      propertyPath: m_UseAutoMass
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8573479112479365833, guid: 600c1d0bbd216409084f90451530ae6e, type: 3}
+      propertyPath: m_Mass
+      value: 0.19444858
+      objectReference: {fileID: 0}
+    - target: {fileID: 8573479112479365833, guid: 600c1d0bbd216409084f90451530ae6e, type: 3}
+      propertyPath: m_UseAutoMass
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8573479112573632430, guid: 600c1d0bbd216409084f90451530ae6e, type: 3}
+      propertyPath: m_Mass
+      value: 3.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8573479112573632430, guid: 600c1d0bbd216409084f90451530ae6e, type: 3}
+      propertyPath: m_UseAutoMass
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8573479112573632430, guid: 600c1d0bbd216409084f90451530ae6e, type: 3}
+      propertyPath: m_GravityScale
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8573479112673776274, guid: 600c1d0bbd216409084f90451530ae6e, type: 3}
+      propertyPath: m_Mass
+      value: 0.1060867
+      objectReference: {fileID: 0}
+    - target: {fileID: 8573479112673776274, guid: 600c1d0bbd216409084f90451530ae6e, type: 3}
+      propertyPath: m_LinearDrag
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8573479112673776274, guid: 600c1d0bbd216409084f90451530ae6e, type: 3}
+      propertyPath: m_UseAutoMass
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8573479112710107163, guid: 600c1d0bbd216409084f90451530ae6e, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8573479112710107238, guid: 600c1d0bbd216409084f90451530ae6e, type: 3}
+      propertyPath: m_Mass
+      value: 0.1060867
+      objectReference: {fileID: 0}
+    - target: {fileID: 8573479112710107238, guid: 600c1d0bbd216409084f90451530ae6e, type: 3}
+      propertyPath: m_UseAutoMass
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8573479113117530396, guid: 600c1d0bbd216409084f90451530ae6e, type: 3}
+      propertyPath: m_Mass
+      value: 0.1060867
+      objectReference: {fileID: 0}
+    - target: {fileID: 8573479113117530396, guid: 600c1d0bbd216409084f90451530ae6e, type: 3}
+      propertyPath: m_UseAutoMass
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8573479113232313528, guid: 600c1d0bbd216409084f90451530ae6e, type: 3}
+      propertyPath: m_UseLimits
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8573479113232313528, guid: 600c1d0bbd216409084f90451530ae6e, type: 3}
+      propertyPath: m_AngleLimits.m_LowerAngle
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 8573479113232313528, guid: 600c1d0bbd216409084f90451530ae6e, type: 3}
+      propertyPath: m_AngleLimits.m_UpperAngle
+      value: 90
+      objectReference: {fileID: 0}
+    - target: {fileID: 8573479113232313529, guid: 600c1d0bbd216409084f90451530ae6e, type: 3}
+      propertyPath: m_Mass
+      value: 0.10608666
+      objectReference: {fileID: 0}
+    - target: {fileID: 8573479113232313529, guid: 600c1d0bbd216409084f90451530ae6e, type: 3}
+      propertyPath: m_UseAutoMass
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8573479113232313530, guid: 600c1d0bbd216409084f90451530ae6e, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -48.35
+      objectReference: {fileID: 0}
+    - target: {fileID: 8573479113232313530, guid: 600c1d0bbd216409084f90451530ae6e, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8573479113331815699, guid: 600c1d0bbd216409084f90451530ae6e, type: 3}
+      propertyPath: m_Mass
+      value: 2.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8573479113331815699, guid: 600c1d0bbd216409084f90451530ae6e, type: 3}
+      propertyPath: m_UseAutoMass
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8573479113513432182, guid: 600c1d0bbd216409084f90451530ae6e, type: 3}
+      propertyPath: m_Mass
+      value: 0.40961275
+      objectReference: {fileID: 0}
+    - target: {fileID: 8573479113513432182, guid: 600c1d0bbd216409084f90451530ae6e, type: 3}
+      propertyPath: m_UseAutoMass
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8573479113779036564, guid: 600c1d0bbd216409084f90451530ae6e, type: 3}
+      propertyPath: m_Mass
+      value: 0.1060867
+      objectReference: {fileID: 0}
+    - target: {fileID: 8573479113779036564, guid: 600c1d0bbd216409084f90451530ae6e, type: 3}
+      propertyPath: m_LinearDrag
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8573479113779036564, guid: 600c1d0bbd216409084f90451530ae6e, type: 3}
+      propertyPath: m_UseAutoMass
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 600c1d0bbd216409084f90451530ae6e, type: 3}

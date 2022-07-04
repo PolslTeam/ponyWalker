@@ -6,10 +6,11 @@ using System;
 public class Player : MonoBehaviour {
     static int LEGS_AMOUNT = 4;
     string[] LEGS_NAMES = {"leftLeg1", "leftLeg2", "rightLeg1", "rightLeg2"};
-    static int UPPER_SPEED = 100;
-    static int LOWER_SPEED = 150;
+    static int UPPER_SPEED = 150;
+    static int LOWER_SPEED = 250;
     static int MOVING_TORQUE = 100;
-    static int UPPER_MAX_LIMIT = 90; // [deg]
+    static int UPPER_MAX_BACK_LIMIT = 60; // [deg]
+    static int UPPER_MAX_FRONT_LIMIT = 75; // [deg]
 
     PhysicsMaterial2D frictionHigh;
     PhysicsMaterial2D frictionLow;
@@ -39,7 +40,7 @@ public class Player : MonoBehaviour {
     }
 
     // direction that leg moves on click
-    int[] UPPER_DIRS = {1, 1, -1, -1};
+    int[] UPPER_DIRS = {-1, -1, -1, -1};
     KeyCode[] KEYS = {KeyCode.Q, KeyCode.W, KeyCode.O, KeyCode.P};
 
     void Update() {
@@ -63,9 +64,18 @@ public class Player : MonoBehaviour {
             int udir = UPPER_DIRS[i];
 
             bool isKeyPressed = Input.GetKey(key);
+            bool isUpperMaxLimitReached = false;
 
             // handle upper part of leg
-            bool isUpperMaxLimitReached = Math.Abs(uhj.jointAngle) > UPPER_MAX_LIMIT;
+            if (i < 2)
+            {
+                isUpperMaxLimitReached = Math.Abs(uhj.jointAngle) > UPPER_MAX_BACK_LIMIT;
+            }
+            else
+            {
+                isUpperMaxLimitReached = Math.Abs(uhj.jointAngle) > UPPER_MAX_FRONT_LIMIT;
+            }
+            
 
             if(isKeyPressed) {
                 // other direction of move in frond and back legs
@@ -89,21 +99,21 @@ public class Player : MonoBehaviour {
                 // float angleWanted = -lhj.jointAngle - uhj.jointAngle;
                 float angleWanted = -lhj.jointAngle;
                 // if key is pressed, move them slightly
-                angleWanted += isKeyPressed ? 20 : -10;
+                angleWanted += isKeyPressed ? 90 : 15;
 
                 lm.motorSpeed = LOWER_SPEED * angleWanted / 50;
                 lm.maxMotorTorque = MOVING_TORQUE;
 
-                lrb.drag = isKeyPressed ? 2 : 1;
-                lpc.sharedMaterial = isKeyPressed ? frictionHigh : frictionLow;
+                lrb.drag = !isKeyPressed ? 2 : 1;
+                lpc.sharedMaterial = !isKeyPressed ? frictionHigh : frictionLow;
             }
             // front legs more relaxed
             else {
                 // stabilize with relation to the torso, not upper leg
-                float angleToBody = -lhj.jointAngle - uhj.jointAngle;
-                lm.motorSpeed = LOWER_SPEED * angleToBody / 20;
-                // lower torque near the center, but does it make any sense? probably should be even the opposite..
-                lm.maxMotorTorque = MOVING_TORQUE * Math.Abs(angleToBody) / 20;
+                float angleToBody = -lhj.jointAngle - uhj.jointAngle * 1.3f;
+                lm.motorSpeed = (LOWER_SPEED * angleToBody) / 5;
+                lm.maxMotorTorque = MOVING_TORQUE * Math.Abs(angleToBody) * 0.4f;
+
             }
             lhj.motor = lm;
         }
